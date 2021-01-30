@@ -38,7 +38,8 @@ app.post('/messages', (req, res) => {
 
     res.status(201).json({ text: inMessage })
 })
-//สำหรับ Post 
+//สำหรับ Post
+//Test
 
 app.listen(3000, () => {
     console.log('Start server at port 3000.')
