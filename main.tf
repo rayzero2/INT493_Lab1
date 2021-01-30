@@ -3,16 +3,14 @@ provider "azurerm" {
 }
 
 terraform {
-       backend "remote" {
-         # The name of your Terraform Cloud organization.
-         organization = "INT493"
+  backend "azurerm" {
+    resource_group_name  = "INT493"
+    storage_account_name = "int493ac"
+    container_name       = "terraform-state"
+    key                  = "terraform.tfstate"
+  }
+}
 
-         # The name of the Terraform Cloud workspace to store Terraform state files in.
-         workspaces {
-           name = "INT493_lab1"
-         }
-       }
-     }
 
 resource "azurerm_resource_group" "INT493" {
     name = "INT493"
