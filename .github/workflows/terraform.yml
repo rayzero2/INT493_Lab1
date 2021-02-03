@@ -48,6 +48,7 @@ on:
   push:
     branches:
     - main
+  pull_request:
 
 jobs:
   terraform:
@@ -58,12 +59,6 @@ jobs:
     defaults:
       run:
         shell: bash
-
-    env:
-      ARM_CLIENT_ID: adc3444d-8930-4163-85d9-1daee54852ad
-      ARM_CLIENT_SECRET: ${{secrets.TF_ARM_CLIENT_SECRET}}
-      ARM_SUBSCRIPTION_ID: aec9d974-66cd-47ff-a449-486fa40a651e
-      ARM_TENANT_ID: 79845616-9df0-43e0-8842-e300feb2642a
 
     steps:
     # Checkout the repository to the GitHub Actions runner
@@ -93,3 +88,8 @@ jobs:
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve
+    
+    #setup Node env
+    - name: Setup Node.js environment
+      uses: actions/setup-node@v2.1.4
+
