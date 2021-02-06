@@ -67,14 +67,30 @@ resource "azurerm_linux_virtual_machine" "vm" {
   source_image_reference {
     publisher = "Canonical"
     offer     = "0001-com-ubuntu-server-focal"
-    sku       = "20.04-LTS"
+    sku       = "20_04-lts"
     version   = "latest"
+  }
+  
+  provisioner "remote-exec" {
+    inline = [
+      "sudo apt-get update",
+      "sudo apt install nodejs -y",
+      "sudo apt-get install npm -y",
+      "sudo apt install git -y",
+      "git clone https://github.com/rayzero2/INT493_Lab1.git",
+      "cd INT493_Lab1/Myweb",
+      "npm install",
+      "cd ..",
+      "sudo mv index.service /lib/systemd/system/index.service",
+      "sudo systemctl enable index.service",
+      "sudo systemctl start index.service",
+    ]
+
+    connection {
+      host     = self.public_ip_address
+      user     = self.admin_username
+      password = self.admin_password
+    }
   }
 }
 
-resource "azurerm_virtual_machine_data_disk_attachment" "vdd" {
-  managed_disk_id    = azurerm_managed_disk.example.id
-  virtual_machine_id = azurerm_virtual_machine.example.id
-  lun                = "10"
-  caching            = "ReadWrite"
-}
