@@ -61,11 +61,6 @@ jobs:
         shell: bash
 
     steps:
-    - name: Azure Login
-      uses: azure/login@v1
-      with: # Set Azure credentials secret as an input
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
       uses: actions/checkout@v2
@@ -75,6 +70,9 @@ jobs:
       uses: hashicorp/setup-terraform@v1
       with:
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+    - name: Azure Login
+      run: az login --use-device-code
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init

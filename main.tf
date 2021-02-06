@@ -1,4 +1,8 @@
 provider "azurerm" {
+  subscription_id = "aec9d974-66cd-47ff-a449-486fa40a651e"
+  client_id       = "3b81259b-e25d-4cd9-b903-d0d4727c5c8d"
+  client_secret   = "q4BC8WT2bAq.z4vxKU0S5wr7lbVh_azLEy"
+  tenant_id       = "79845616-9df0-43e0-8842-e300feb2642a"
   features {}
 }
 
@@ -21,6 +25,13 @@ resource "azurerm_subnet" "sub493" {
   address_prefixes     = ["10.0.2.0/24"]
 }
 
+resource "azurerm_public_ip" "pi" {
+  name                = "INT493test-pip"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  allocation_method   = "Static"
+}
+
 resource "azurerm_network_interface" "ni" {
   name                = "lab1819"
   location            = azurerm_resource_group.rg.location
@@ -30,6 +41,7 @@ resource "azurerm_network_interface" "ni" {
     name                          = "internal"
     subnet_id                     = azurerm_subnet.sub493.id
     private_ip_address_allocation = "Dynamic"
+    public_ip_address_id          = azurerm_public_ip.pi.id
   }
 }
 
@@ -58,4 +70,11 @@ resource "azurerm_linux_virtual_machine" "vm" {
     sku       = "20.04-LTS"
     version   = "latest"
   }
+}
+
+resource "azurerm_virtual_machine_data_disk_attachment" "vdd" {
+  managed_disk_id    = azurerm_managed_disk.example.id
+  virtual_machine_id = azurerm_virtual_machine.example.id
+  lun                = "10"
+  caching            = "ReadWrite"
 }
