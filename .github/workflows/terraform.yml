@@ -63,9 +63,8 @@ jobs:
     steps:
     - name: Azure Login
       uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
-
+      with: # Set Azure credentials secret as an input
+        credentials: ${{ secrets.AZURE_CREDENTIALS }}
 
     # Checkout the repository to the GitHub Actions runner
     - name: Checkout
